@@ -34,9 +34,9 @@ public class SendMail {
     	message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receive,"收件人","UTF-8"));
     	message.setSentDate(new Date());//发送时间
     	message.saveChanges();//保存邮件
-    	 Transport transport=session.getTransport();//建立连接对象
-		 transport.connect("smtp.qq.com",send,"rnjafxzwfpxuhaba");//建立连接
-         transport.sendMessage(message,message.getAllRecipients());  
+    	Transport transport=session.getTransport();//建立连接对象
+		transport.connect("smtp.qq.com",send,"rnjafxzwfpxuhaba");//建立连接
+        transport.sendMessage(message,message.getAllRecipients());  
 		
 	}
 
