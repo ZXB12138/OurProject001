@@ -56,31 +56,37 @@ public class RegisterServlet extends HttpServlet {
 		PrintWriter out =response.getWriter();
 		String username=request.getParameter("username");
 		String password=request.getParameter("password");
+		String password2=request.getParameter("password2");
 		String QQmail=request.getParameter("QQmail");
 		String PIN=request.getParameter("PIN");
-		if(username.equals("")||password.equals("")||QQmail.equals("")|| PIN.equals(""))
+        
+		if(username.equals("")||password.equals("")||QQmail.equals("")|| PIN.equals(""))//信息是否全部填写
 		{
 			out.write("请完善信息");
+			//request.setAttribute("info","请完善信息");
 		}
-		else if(!QQmail.matches("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*"))
+		else if(!password.equals(password2)) {//两次密码是否相同
+			out.write("两次密码不相同");
+		}
+		else if(!QQmail.matches("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*"))//邮箱格式是否正确
 		{
 			out.write("邮箱格式错误");
 		}
 		else {
 			
 			String [] s=new String[2];
-		s=(String[]) request.getSession().getAttribute("s");
+		s=(String[]) request.getSession().getAttribute("s");//获取注册邮箱和验证码
 		User user=new User(username, password, QQmail);	
 		if(s!=null) {
-			
 		
-		if(PIN.equals(s[0])&&QQmail.equals(s[1])) {
+		if(PIN.equals(s[0])&&QQmail.equals(s[1])) {//注册邮箱和验证码是否匹配
 			try {
+				
 				request.getSession().removeAttribute("s");
 				int flag=service.register(user);
 				if(flag==1)
 				{
-					out.write("注册成功");
+					out.write("1");
 					
 				}
 				else if(flag==0)
@@ -116,7 +122,7 @@ public class RegisterServlet extends HttpServlet {
 		
 		request.getSession().removeAttribute("s");
 		String receive=request.getParameter("QQmail");
-		PrintWriter out =response.getWriter();
+		PrintWriter out =response.getWriter();	
 		String [] s=new String[2];
 		 if(receive.matches("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*"))
 		 { 
@@ -127,8 +133,8 @@ public class RegisterServlet extends HttpServlet {
 			 out.write("发送成功");
 			 s[0]=pin;
 			 s[1]=receive;
-			 request.getSession().setAttribute("s", s);
-			 request.getSession().setMaxInactiveInterval(60);
+			 request.getSession().setAttribute("s", s); //将注册邮箱和验证码传入session中
+			 request.getSession().setMaxInactiveInterval(60); //设置session时间
 			}
 			else
 				out.write("邮箱已注册");
