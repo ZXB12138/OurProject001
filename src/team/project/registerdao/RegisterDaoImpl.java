@@ -49,6 +49,7 @@ public class RegisterDaoImpl implements IRegisterDao{
 		return false;
 	}
 
+	//查询邮箱是否已被注册，注册返回true，没有返回false
 	@Override
 	public boolean QQmailisregister(String QQmail) throws SQLException {
 		String sql="select count(*) from user where QQMail=?; ";
