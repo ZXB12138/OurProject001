@@ -26,10 +26,12 @@ public class LoginServlet extends HttpServlet {
 		PrintWriter out=response.getWriter();
 		String username=request.getParameter("username");
 		String password=request.getParameter("password");
-		if(username.equals("")||password.equals(""))
+		
+
+		if(username.equals("")||password.equals(""))//用户名和密码是否填写
 		{
-			request.setAttribute("str","请将信息填写完整");
-			request.getRequestDispatcher("login.jsp").forward(request, response);
+			//request.setAttribute("info","请将信息填写完整");
+			out.write("请将信息填写完整");
 		}
 		else {
 			User user=new User(username,password);
@@ -38,17 +40,19 @@ public class LoginServlet extends HttpServlet {
 				flag=login(user);
 				if(flag==1)
 				{
-					request.getRequestDispatcher("welcome.jsp").forward(request, response);
+					out.write("登录成功");
+					
 				}
 				else if(flag==0)
 				{
-					request.setAttribute("str","用户名或密码错误");
-					request.getRequestDispatcher("login.jsp").forward(request, response);
+					//request.setAttribute("info","用户名或密码错误");
+					out.write("用户名或密码错误");
 				}
 				else if(flag==-1)
 				{
-					request.setAttribute("str","登录失败");
-					request.getRequestDispatcher("login.jsp").forward(request, response);
+					out.write("登录失败");
+					//request.setAttribute("info","登录失败");
+					
 				}
 				
 					
@@ -60,7 +64,7 @@ public class LoginServlet extends HttpServlet {
 
 	private int login(User user) throws SQLException {
 		ILoginService service=new LoginServiceImpl();
-		return service.check(user);
+		return service.check(user);//用户名和密码是否匹配,匹配返回1，用户名或密码错误返回0,未知返回-1
 	
 		
 	}
